@@ -24,5 +24,8 @@ jobs:
       - name: dependency
         run: pip install -r ./etl-pipeline/tests/requirements.txt
 
+      - name: AWS credentials
+        run: python ./get_token.py
+         
       - name: unit test
         run: pytest etl-pipeline/tests/unit/

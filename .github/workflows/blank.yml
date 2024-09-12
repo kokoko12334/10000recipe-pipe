@@ -43,6 +43,7 @@ jobs:
       - name: Build SAM Application
         run: |
           cd ./etl-pipeline
+          sudo chmod +x ./build.sh
           ./build.sh
 
       - name: Deploy SAM Application

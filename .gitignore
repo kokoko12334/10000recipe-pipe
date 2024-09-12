@@ -1,0 +1,16 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# pytest cache files
+.pytest_cache/
+*.cache
+
+# 기타
+*.log
+
+#가상환경
+myenv/
+recipe_lambda_aws/

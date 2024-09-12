@@ -40,7 +40,7 @@ jobs:
         with:
           version: 1.124.0
 
-      - name: Build SAM Application
+      - name: Build and Deploy SAM Application
         run: |
           cd ./etl-pipeline
           sudo chmod +x ./build.sh

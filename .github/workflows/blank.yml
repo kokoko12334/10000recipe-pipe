@@ -1,41 +1,47 @@
-name: CI
+name: CI 
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+on: 
+  push: 
+    branches: 
+      - "main" 
+  pull_request: 
+    branches: 
+      - "main" 
   workflow_dispatch:
-
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5.2.0
-        with:
+        with: 
           python-version: 3.12
-      
-      - name: Dependency
-        run: pip install -r ./etl-pipeline/tests/requirements.txt
-      
-      - name: AWS credentials
-      - uses: aws-actions/configure-aws-credentials@v2
-        with:
+
+      - name: Install Dependencies
+        run: |
+          pip install -r ./etl-pipeline/tests/requirements.txt
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with: 
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2                     
+          aws-region: ap-northeast-2
 
-      - name: Unit test
+      - name: Run Unit Tests
         run: pytest etl-pipeline/tests/unit/
 
+      - name: Setup SAM
+        uses: aws-actions/setup-sam@v2
+        with:
+          python-version: 3.12 
 
-      - uses: actions/checkout@v3
-      - uses: aws-actions/setup-sam@v2      
-      - run: sam build --use-container
-      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+      - name: Build SAM Application
+        run: sam build --use-container
+
+      - name: Deploy SAM Application
+        run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset

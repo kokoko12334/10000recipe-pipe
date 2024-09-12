@@ -41,8 +41,9 @@ jobs:
           version: 1.124.0
 
       - name: Build SAM Application
-        run: cd ./etl-pipeline
-        run: ./build.sh
+        run: |
+          cd ./etl-pipeline
+          ./build.sh
 
       - name: Deploy SAM Application
         run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset

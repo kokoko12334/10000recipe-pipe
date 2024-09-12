@@ -45,6 +45,4 @@ jobs:
           cd ./etl-pipeline
           sudo chmod +x ./build.sh
           ./build.sh
-
-      - name: Deploy SAM Application
-        run: sam deploy --stack-name etl-pipeline --no-confirm-changeset --no-fail-on-empty-changeset
+          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset

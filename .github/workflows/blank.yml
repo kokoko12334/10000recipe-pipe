@@ -41,7 +41,7 @@ jobs:
           python-version: 3.12 
 
       - name: Build SAM Application
-        run: sam build
+        run: sam build --use-container --template etl-pipeline/template.yml
 
       - name: Deploy SAM Application
         run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset

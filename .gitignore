@@ -1,3 +1,4 @@
+./etl-pipeline/.aws-sam/
 # Python cache files
 __pycache__/
 *.pyc
@@ -15,5 +16,3 @@ __pycache__/
 myenv/
 recipe_lambda_aws/
 
-#빌드된거
-etl-pipeline/.aws-sam/

@@ -47,4 +47,4 @@ jobs:
           ./build.sh
 
       - name: Deploy SAM Application
-        run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+        run: sam deploy --stack-name etl-pipeline --no-confirm-changeset --no-fail-on-empty-changeset

@@ -16,4 +16,4 @@ myenv/
 recipe_lambda_aws/
 
 #빌드된거
-etl_pipeline/.aws-sam/
+etl-pipeline/.aws-sam/

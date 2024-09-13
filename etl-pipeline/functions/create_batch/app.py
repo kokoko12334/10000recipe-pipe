@@ -50,7 +50,7 @@ def lambda_handler(event, context):
 
     batch_id = ""
     state = False
-    
+
     if data:
         state = True
         try:
@@ -87,7 +87,6 @@ def lambda_handler(event, context):
         except ClientError as e:
             recipe_logger.log_message("ERROR", f'create-batch-lambda: Failed to upload {BATCH_FILE} to bucket {BUCKET_NAME}. Error: {e}')
             
-
     output = {
         "state": state,
         "batch_id":batch_id,

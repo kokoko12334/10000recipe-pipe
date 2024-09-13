@@ -1,4 +1,4 @@
-./etl-pipeline/.aws-sam/
+etl-pipeline/.aws-sam/
 # Python cache files
 __pycache__/
 *.pyc

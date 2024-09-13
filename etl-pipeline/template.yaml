@@ -22,17 +22,22 @@ Resources:
         CancelBatchFunctionArn: !GetAtt CancelBatchFunction.Arn
         TransVectorFunctionArn: !GetAtt TransVectorFunction.Arn
         UpdateVectorDBFunctionArn: !GetAtt UpdateVectorDBFunction.Arn
-        
-      Events:
-        HourlyTradingSchedule:
-          Type: Schedule # More info about Schedule Event Source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-statemachine-schedule.html
-          Properties:
-            Description: Schedule to run the stock trading state machine every hour
-            Enabled: False 
-            Schedule: "rate(1 hour)"
+
       Policies: 
         - LambdaInvokePolicy:
             FunctionName: !Ref GetUrlsFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref HtmlParsingFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref CreateBatchFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref CheckEmbeddingFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref CancelBatchFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref TransVectorFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref UpdateVectorDBFunction
 
   GetUrlsFunction:
     Type: AWS::Serverless::Function 

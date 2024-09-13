@@ -8,6 +8,8 @@ from utils.aws_ssm import SSMParameterStore
 
 ssm = SSMParameterStore()
 BUCKET_NAME = ssm.get_parameter("RECIPE_BUCKETNAME")
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.3904.108 Safari/537.36'
+
 recipe_logger = RecipeLogger(BUCKET_NAME)
 schema = OutputSchema()
 
@@ -19,7 +21,7 @@ def lambda_handler(event, context):
     for i in range(len(rcp_no_arr)):
         rcp_no = rcp_no_arr[i]
         url = f"https://m.10000recipe.com/recipe/{rcp_no}"
-        response = requests.get(url)
+        response = requests.get(url, headers={'User-Agent': USER_AGENT})
             
         try:
             response.raise_for_status()

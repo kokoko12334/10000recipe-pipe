@@ -101,12 +101,9 @@
                 {
                     "Variable": "$.state",
                     "BooleanEquals": false,
-                    "Next": "Fail"
+                    "Next": "transVector"
                 }
             ]
-        },
-        "Fail": {
-            "Type": "Fail"
         },
         "checkEmbedding": {
             "Type": "Task",

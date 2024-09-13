@@ -95,11 +95,3 @@ def lambda_handler(event, context):
         raise ValidationError(e)
     
     return output
-
-event = {
-    "rcp_no_arr": [7033006, 7033041, 7033042, 7033043, 7033044, 7033045, 7033046, 7033047, 7033048, 7033049]
-}
-
-ouput = lambda_handler(event=event, context="")
-
-print(ouput)

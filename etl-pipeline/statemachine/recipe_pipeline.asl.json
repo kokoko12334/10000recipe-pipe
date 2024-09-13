@@ -65,7 +65,48 @@
                     "BackoffRate": 2
                 }
             ],
-            "Next": "Pass"
+            "Next": "createBatch"
+        },
+        "createBatch": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "OutputPath": "$.Payload",
+            "Parameters": {
+                "Payload.$": "$",
+                "FunctionName": "${CreateBatchFunctionArn}"
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException",
+                        "Lambda.TooManyRequestsException"
+                    ],
+                    "IntervalSeconds": 1,
+                    "MaxAttempts": 3,
+                    "BackoffRate": 2
+                }
+            ],
+            "Next": "batchSuccess"
+        },
+        "batchSuccess": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.state",
+                    "BooleanEquals": true,
+                    "Next": "Pass"
+                },
+                {
+                    "Variable": "$.state",
+                    "BooleanEquals": false,
+                    "Next": "Fail"
+                }
+            ]
+        },
+        "Fail": {
+            "Type": "Fail"
         }
     }
 }

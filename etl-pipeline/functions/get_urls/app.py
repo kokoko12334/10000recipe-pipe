@@ -13,7 +13,12 @@ schema = OutputSchema()
 
 @recipe_logger.log_and_upload()
 def lambda_handler(event, context):
-    latest_rcp_no = int(ssm.get_parameter("LATEST_RCPNO_DEV"))
+
+    if "test" in event:
+        latest_rcp_no = int(ssm.get_parameter("LATEST_RCPNO_DEV"))
+    else:
+        latest_rcp_no = int(ssm.get_parameter("LATEST_RCPNO_PRO"))
+
     recipe_logger.log_message("INFO", f"get_urls_lambda: latest_rcp_no:{latest_rcp_no}")
 
     rcp_no_arr = []
@@ -48,7 +53,10 @@ def lambda_handler(event, context):
         schema.validate(output)
         recipe_logger.log_message("INFO", f"get_urls_lambda: succeeded - urls successfully validated")
         if state:
-            ssm.put_parameter("LATEST_RCPNO_DEV", str(rcp_no_arr[-1]))
+            if "test" in event:
+                ssm.put_parameter("LATEST_RCPNO_DEV", str(rcp_no_arr[-1]))
+            else:
+                ssm.put_parameter("LATEST_RCPNO_PRO", str(rcp_no_arr[-1]))
 
     except ValidationError as e:
         recipe_logger.log_message("ERROR", e)

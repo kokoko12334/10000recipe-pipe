@@ -20,6 +20,7 @@ Resources:
         CreateBatchFunctionArn: !GetAtt CreateBatchFunction.Arn
         CheckEmbeddingFunctionArn: !GetAtt CheckEmbeddingFunction.Arn
         CancelBatchFunctionArn: !GetAtt CancelBatchFunction.Arn
+        TransVectorFunctionArn: !GetAtt TransVectorFunction.Arn
         
       Events:
         HourlyTradingSchedule:
@@ -76,6 +77,16 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/cancel_batch/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Role: arn:aws:iam::851725427984:role/lambda-fullaccess-s3
+
+  TransVectorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/trans_vector/
       Handler: app.lambda_handler
       Runtime: python3.12
       Architectures:

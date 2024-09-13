@@ -16,6 +16,7 @@ copy_utils "functions/create_batch/"
 copy_utils "functions/check_embedding/"
 copy_utils "functions/cancel_batch/"
 copy_utils "functions/trans_vector/"
+copy_utils "functions/update_vectordb/"
 
 # SAM 빌드 실행
 sam build

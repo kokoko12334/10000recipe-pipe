@@ -11,6 +11,8 @@ debugpy==1.8.5
 decorator==5.1.1
 distro==1.9.0
 executing==2.1.0
+googleapis-common-protos==1.65.0
+grpcio==1.66.1
 h11==0.14.0
 httpcore==1.0.5
 httpx==0.27.2
@@ -23,6 +25,7 @@ jiter==0.5.0
 jmespath==1.0.1
 jupyter_client==8.6.2
 jupyter_core==5.7.2
+lz4==4.3.3
 marshmallow==3.22.0
 matplotlib-inline==0.1.7
 nest-asyncio==1.6.0
@@ -31,9 +34,14 @@ openai==1.45.0
 packaging==24.1
 parso==0.8.4
 pexpect==4.9.0
+pinecone==5.1.0
+pinecone-plugin-inference==1.0.3
+pinecone-plugin-interface==0.0.7
 platformdirs==4.3.2
 pluggy==1.5.0
 prompt_toolkit==3.0.47
+protobuf==4.25.4
+protoc-gen-openapiv2==0.0.1
 psutil==6.0.0
 ptyprocess==0.7.0
 pure_eval==0.2.3

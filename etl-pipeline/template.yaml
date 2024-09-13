@@ -21,6 +21,7 @@ Resources:
         CheckEmbeddingFunctionArn: !GetAtt CheckEmbeddingFunction.Arn
         CancelBatchFunctionArn: !GetAtt CancelBatchFunction.Arn
         TransVectorFunctionArn: !GetAtt TransVectorFunction.Arn
+        UpdateVectorDBFunctionArn: !GetAtt UpdateVectorDBFunction.Arn
         
       Events:
         HourlyTradingSchedule:
@@ -87,6 +88,16 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/trans_vector/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Role: arn:aws:iam::851725427984:role/lambda-fullaccess-s3
+
+  UpdateVectorDBFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/update_vectordb/
       Handler: app.lambda_handler
       Runtime: python3.12
       Architectures:

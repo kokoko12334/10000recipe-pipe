@@ -6,3 +6,4 @@ def test_get_urls():
     data = app.lambda_handler(input_payload, "")
 
     assert "state" in data
+    assert "cnt" in data

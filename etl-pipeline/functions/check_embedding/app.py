@@ -20,4 +20,9 @@ def lambda_handler(event, context):
         recipe_logger.log_message("INFO", f"check-embedding-done-lambda: succeeded - Successfully batch file embedded: {batch_id} ")
     
     event["state"] = state
+    if "cnt" in event.keys():
+        event["cnt"] += 1
+    else:
+        event["cnt"] = 1
+        
     return event

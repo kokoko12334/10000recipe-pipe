@@ -55,9 +55,7 @@ def lambda_handler(event, context):
         schema.validate(output)
         recipe_logger.log_message("INFO", f"get_urls_lambda: succeeded - urls successfully validated")
         if state:
-            if "test" in event:
-                ssm.put_parameter("LATEST_RCPNO_DEV", str(rcp_no_arr[-1]))
-            else:
+            if "test" not in event:
                 ssm.put_parameter("LATEST_RCPNO_PRO", str(rcp_no_arr[-1]))
 
     except ValidationError as e:

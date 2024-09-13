@@ -62,16 +62,14 @@ class TestStateMachine(TestCase):
         response = client.list_stack_resources(StackName=stack_name)
         resources = response["StackResourceSummaries"]
         state_machine_resources = [
-            resource for resource in resources if resource["LogicalResourceId"] == "StockTradingStateMachine"
+            resource for resource in resources if resource["LogicalResourceId"] == "RecipePipelineMachine"
         ]
-        transaction_table_resources = [
-            resource for resource in resources if resource["LogicalResourceId"] == "TransactionTable"
-        ]
-        if not state_machine_resources or not transaction_table_resources:
+        
+        if not state_machine_resources:
             raise Exception("Cannot find StockTradingStateMachine or TransactionTable")
 
         cls.state_machine_arn = state_machine_resources[0]["PhysicalResourceId"]
-        cls.transaction_table_name = transaction_table_resources[0]["PhysicalResourceId"]
+        
 
     def setUp(self) -> None:
         self.client = boto3.client("stepfunctions")
@@ -157,5 +155,5 @@ class TestStateMachine(TestCase):
     def test_state_machine(self):
         execution_arn = self._start_execute()
         self._wait_execution(execution_arn)
-        transaction_table_input = self._retrieve_transaction_table_input(execution_arn)
-        self._verify_transaction_record_written(transaction_table_input)
+        # transaction_table_input = self._retrieve_transaction_table_input(execution_arn)
+        # self._verify_transaction_record_written(transaction_table_input)

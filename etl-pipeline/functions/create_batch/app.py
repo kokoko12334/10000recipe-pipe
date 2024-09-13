@@ -35,7 +35,6 @@ def lambda_handler(event, context):
                 ingres_set.add(ingre)
 
     data = []
-    state = True
     for ingredient in ingres_set: 
         json_data = {
             "custom_id": f"{ingredient}", 
@@ -49,40 +48,45 @@ def lambda_handler(event, context):
         }
         data.append(json_data)
 
-    try:
-        with io.BytesIO() as byte_stream:
+    batch_id = ""
+    state = False
+    
+    if data:
+        state = True
+        try:
+            with io.BytesIO() as byte_stream:
 
-            # JSON Lines 데이터를 문자열로 변환하고 UTF-8로 인코딩하여 BytesIO에 작성
-            json_lines = "\n".join(json.dumps(entry, ensure_ascii=False) for entry in data)
-            byte_stream.write(json_lines.encode('utf-8'))
+                # JSON Lines 데이터를 문자열로 변환하고 UTF-8로 인코딩하여 BytesIO에 작성
+                json_lines = "\n".join(json.dumps(entry, ensure_ascii=False) for entry in data)
+                byte_stream.write(json_lines.encode('utf-8'))
 
-            # # BytesIO 객체의 내용을 S3에 업로드
-            byte_stream.seek(0)  # 파일 포인터를 처음으로 이동
-            batch_input_file = openai_client.files.create(
-                file=byte_stream,
-                purpose="batch"
-            )
+                # # BytesIO 객체의 내용을 S3에 업로드
+                byte_stream.seek(0)  # 파일 포인터를 처음으로 이동
+                batch_input_file = openai_client.files.create(
+                    file=byte_stream,
+                    purpose="batch"
+                )
+
+                batch = openai_client.batches.create(
+                    input_file_id=batch_input_file.id,
+                    endpoint="/v1/embeddings",
+                    completion_window="24h",
+                    metadata={
+                      "description": "FCKU"
+                    }
+                )
+                batch_id = batch.id
+                recipe_logger.log_message("INFO", f'create-batch-lambda: succeeded - Successfully request batch:{batch_id}.')
+                BATCH_FILE = f'batch_files/batch_{recipe_logger.formatted_now}-{batch_id}.jsonl'
+
+                # BytesIO 객체의 내용을 S3에 업로드
+                byte_stream.seek(0)  # 파일 포인터를 처음으로 이동
+                recipe_logger.s3.upload_fileobj(byte_stream, BUCKET_NAME, BATCH_FILE)
+                recipe_logger.log_message("INFO", f'create-batch-lambda: succeeded - Successfully uploaded {BATCH_FILE} to bucket {BUCKET_NAME}.')
+
+        except ClientError as e:
+            recipe_logger.log_message("ERROR", f'create-batch-lambda: Failed to upload {BATCH_FILE} to bucket {BUCKET_NAME}. Error: {e}')
             
-            batch = openai_client.batches.create(
-                input_file_id=batch_input_file.id,
-                endpoint="/v1/embeddings",
-                completion_window="24h",
-                metadata={
-                  "description": "FCKU"
-                }
-            )
-            batch_id = batch.id
-            recipe_logger.log_message("INFO", f'create-batch-lambda: succeeded - Successfully request batch:{batch_id}.')
-            BATCH_FILE = f'batch_files/batch_{recipe_logger.formatted_now}-{batch_id}.jsonl'
-
-            # BytesIO 객체의 내용을 S3에 업로드
-            byte_stream.seek(0)  # 파일 포인터를 처음으로 이동
-            recipe_logger.s3.upload_fileobj(byte_stream, BUCKET_NAME, BATCH_FILE)
-            recipe_logger.log_message("INFO", f'create-batch-lambda: succeeded - Successfully uploaded {BATCH_FILE} to bucket {BUCKET_NAME}.')
-
-    except ClientError as e:
-        recipe_logger.log_message("ERROR", f'create-batch-lambda: Failed to upload {BATCH_FILE} to bucket {BUCKET_NAME}. Error: {e}')
-        state = False
 
     output = {
         "state": state,

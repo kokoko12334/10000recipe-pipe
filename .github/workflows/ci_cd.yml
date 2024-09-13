@@ -1,12 +1,16 @@
-name: CI 
+name: CI_CD
 
 on: 
   push: 
     branches: 
       - "main" 
+    paths:
+      - 'etl-pipeline/**'
   pull_request: 
     branches: 
-      - "main" 
+      - "main"
+    paths:
+      - 'etl-pipeline/**'
   workflow_dispatch:
 
 jobs:
@@ -34,7 +38,6 @@ jobs:
 
       - name: Run Unit Tests
         run: pytest etl-pipeline/tests/unit/
-
 
       - name: Setup SAM
         uses: aws-actions/setup-sam@v2

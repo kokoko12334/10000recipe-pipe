@@ -1,7 +1,7 @@
 import os
 import subprocess
 import json
-#람다작성 -> 테스트코드 -> build.sh 작성 -> 템플릿 추가 -> 상태머신작성
+#람다작성 -> build.sh 작성 -> 테스트코드 -> 템플릿 추가 -> 상태머신작성
 def get_session_token(mfa_serial, token_code):
     try:
         # AWS CLI 명령을 구성합니다.

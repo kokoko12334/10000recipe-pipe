@@ -96,7 +96,7 @@
                 {
                     "Variable": "$.state",
                     "BooleanEquals": true,
-                    "Next": "Pass"
+                    "Next": "checkEmbedding"
                 },
                 {
                     "Variable": "$.state",
@@ -107,6 +107,93 @@
         },
         "Fail": {
             "Type": "Fail"
+        },
+        "checkEmbedding": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "OutputPath": "$.Payload",
+            "Parameters": {
+                "Payload.$": "$",
+                "FunctionName": "${CheckEmbeddingFunctionArn}"
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException",
+                        "Lambda.TooManyRequestsException"
+                    ],
+                    "IntervalSeconds": 1,
+                    "MaxAttempts": 3,
+                    "BackoffRate": 2
+                }
+            ],
+            "Next": "IfEmbeddingDone"
+        },
+        "IfEmbeddingDone": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.state",
+                    "BooleanEquals": true,
+                    "Next": "Pass"
+                },
+                {
+                    "And": [
+                        {
+                            "Variable": "$.state",
+                            "BooleanEquals": false
+                        },
+                        {
+                            "Variable": "$.cnt",
+                            "NumericLessThanEquals": 10
+                        }
+                    ],
+                    "Next": "30sec Wait"
+                },
+                {
+                    "And": [
+                        {
+                            "Variable": "$.state",
+                            "BooleanEquals": false
+                        },
+                        {
+                            "Variable": "$.cnt",
+                            "NumericGreaterThan": 10
+                        }
+                    ],
+                    "Next": "CancelBatch"
+                }
+            ]
+        },
+        "30sec Wait": {
+            "Type": "Wait",
+            "Seconds": 30,
+            "Next": "checkEmbedding"
+        },
+        "CancelBatch": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "OutputPath": "$.Payload",
+            "Parameters": {
+                "Payload.$": "$",
+                "FunctionName": "${CancelBatchFunctionArn}"
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException",
+                        "Lambda.TooManyRequestsException"
+                    ],
+                    "IntervalSeconds": 1,
+                    "MaxAttempts": 3,
+                    "BackoffRate": 2
+                }
+            ],
+            "Next": "createBatch"
         }
     }
 }

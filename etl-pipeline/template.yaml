@@ -18,6 +18,9 @@ Resources:
         GetUrlsFunctionArn: !GetAtt GetUrlsFunction.Arn
         HtmlParsingFunctionArn: !GetAtt HtmlParsingFunction.Arn
         CreateBatchFunctionArn: !GetAtt CreateBatchFunction.Arn
+        CheckEmbeddingFunctionArn: !GetAtt CheckEmbeddingFunction.Arn
+        CancelBatchFunctionArn: !GetAtt CancelBatchFunction.Arn
+        
       Events:
         HourlyTradingSchedule:
           Type: Schedule # More info about Schedule Event Source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-statemachine-schedule.html
@@ -58,6 +61,27 @@ Resources:
       Architectures:
         - x86_64
       Role: arn:aws:iam::851725427984:role/lambda-fullaccess-s3
+
+  CheckEmbeddingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/check_embedding/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Role: arn:aws:iam::851725427984:role/lambda-fullaccess-s3
+
+  CancelBatchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/cancel_batch/
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Role: arn:aws:iam::851725427984:role/lambda-fullaccess-s3
+
 
 Outputs:
   RecipePipelineMachine:

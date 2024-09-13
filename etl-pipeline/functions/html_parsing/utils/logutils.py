@@ -20,7 +20,7 @@ class RecipeLogger:
         utc_now = datetime.now(pytz.utc)
         korea_tz = pytz.timezone('Asia/Seoul')
         korea_now = utc_now.astimezone(korea_tz)
-        formatted_now = korea_now.strftime("%Y%m%d")
+        self.formatted_now = korea_now.strftime("%Y%m%d")
         
         self.log_buffer = StringIO()
 
@@ -42,7 +42,7 @@ class RecipeLogger:
         self.logger.addHandler(handler)
         
         # 로그 파일 이름 설정
-        self.log_file_name = f'recipe-stepfunction-{formatted_now}_log.txt'
+        self.log_file_name = f'recipe-stepfunction-{self.formatted_now}_log.txt'
         self.LOGFILE_KEY = f'recipe-stepfunction-logs/{self.log_file_name}'
         self.BUCKET_NAME = bucket_name
         

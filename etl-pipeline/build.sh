@@ -12,6 +12,7 @@ copy_utils() {
 # 각 함수 디렉토리에 utils 복사
 copy_utils "functions/get_urls/"
 copy_utils "functions/html_parsing/"
+copy_utils "functions/create_batch/"
 
 # SAM 빌드 실행
 sam build

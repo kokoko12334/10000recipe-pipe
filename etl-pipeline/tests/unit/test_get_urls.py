@@ -1,7 +1,7 @@
 from functions.get_urls import app
 
 def test_get_urls():
-    input_payload = {}
+    input_payload = {"test": 0}
 
     data = app.lambda_handler(input_payload, "")
 

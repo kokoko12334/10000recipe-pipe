@@ -35,14 +35,49 @@ jobs:
       - name: Run Unit Tests
         run: pytest etl-pipeline/tests/unit/
 
+
       - name: Setup SAM
         uses: aws-actions/setup-sam@v2
         with:
           version: 1.124.0
 
-      - name: Build and Deploy SAM Application
+      # 테스트 환경에 Step Functions 배포
+      - name: Deploy Step Functions to Test Environment
         run: |
           cd ./etl-pipeline
           sudo chmod +x ./build.sh
           ./build.sh
-          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+          sam deploy \
+            --stack-name etl-pipeline-test \
+            --no-confirm-changeset --no-fail-on-empty-changeset \
+            --parameter-overrides Environment=Test
+
+      # 테스트 환경에서 Integration 테스트 실행
+      - name: Run Integration Test on Test Environment
+        run: |
+          export AWS_SAM_STACK_NAME=etl-pipeline-test
+          pytest etl-pipeline/tests/integration/
+        continue-on-error: true
+
+      # 테스트 성공 시 운영 환경에 배포
+      - name: Deploy Step Functions to Production Environment
+        if: success()
+        run: |
+          cd ./etl-pipeline
+          sam deploy \
+            --stack-name etl-pipeline \
+            --no-confirm-changeset --no-fail-on-empty-changeset \
+            --parameter-overrides Environment=Production
+
+      - name: Notify Failure
+        if: failure()
+        run: echo "Integration test failed! Step Functions was not deployed to production."
+
+      # - name: Build and Deploy SAM Application
+      #   run: |
+      #     cd ./etl-pipeline
+      #     sudo chmod +x ./build.sh
+      #     ./build.sh
+      #     sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+
+

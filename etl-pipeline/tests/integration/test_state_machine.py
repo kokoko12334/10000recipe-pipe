@@ -26,7 +26,6 @@ class TestStateMachine(TestCase):
     transaction_table_name: str
 
     client: BaseClient
-    inserted_record_id: str
 
     @classmethod
     def get_and_verify_stack_name(cls) -> str:
@@ -74,26 +73,12 @@ class TestStateMachine(TestCase):
     def setUp(self) -> None:
         self.client = boto3.client("stepfunctions")
 
-    def tearDown(self) -> None:
-        """
-        Delete the dynamodb table item that are created during the test
-        """
-        client = boto3.client("dynamodb")
-        client.delete_item(
-            Key={
-                "Id": {
-                    "S": self.inserted_record_id,
-                },
-            },
-            TableName=self.transaction_table_name,
-        )
-
     def _start_execute(self) -> str:
         """
         Start the state machine execution request and record the execution ARN
         """
         response = self.client.start_execution(
-            stateMachineArn=self.state_machine_arn, name=f"integ-test-{uuid4()}", input="{}"
+            stateMachineArn=self.state_machine_arn, name=f"integ-test-{uuid4()}", input=json.dumps({"test": 0})
         )
         return response["executionArn"]
 
@@ -110,50 +95,6 @@ class TestStateMachine(TestCase):
             else:
                 self.fail(f"Execution {execution_arn} failed with status {status}")
 
-    def _retrieve_transaction_table_input(self, execution_arn: str) -> Dict:
-        """
-        Make sure "Record Transaction" step was reached, and record the input of it.
-        """
-        response = self.client.get_execution_history(executionArn=execution_arn)
-        events = response["events"]
-        record_transaction_entered_events = [
-            event
-            for event in events
-            if event["type"] == "TaskStateEntered" and event["stateEnteredEventDetails"]["name"] == "Record Transaction"
-        ]
-        self.assertTrue(
-            record_transaction_entered_events,
-            "Cannot find Record Transaction TaskStateEntered event",
-        )
-        transaction_table_input = json.loads(record_transaction_entered_events[0]["stateEnteredEventDetails"]["input"])
-        self.inserted_record_id = transaction_table_input["id"]  # save this ID for cleaning up
-        return transaction_table_input
-
-    def _verify_transaction_record_written(self, transaction_table_input: Dict):
-        """
-        Use the input recorded in _retrieve_transaction_table_input() to
-        verify whether the record has been written to dynamodb
-        """
-        client = boto3.client("dynamodb")
-        response = client.get_item(
-            Key={
-                "Id": {
-                    "S": transaction_table_input["id"],
-                },
-            },
-            TableName=self.transaction_table_name,
-        )
-        self.assertTrue(
-            "Item" in response,
-            f'Cannot find transaction record with id {transaction_table_input["id"]}',
-        )
-        item = response["Item"]
-        self.assertDictEqual(item["Quantity"], {"N": transaction_table_input["qty"]})
-        self.assertDictEqual(item["Price"], {"N": transaction_table_input["price"]})
-        self.assertDictEqual(item["Type"], {"S": transaction_table_input["type"]})
-
     def test_state_machine(self):
         execution_arn = self._start_execute()
         self._wait_execution(execution_arn)
-        # transaction_table_input = self._retrieve_transaction_table_input(execution_arn)
-        # self._verify_transaction_record_written(transaction_table_input)

@@ -15,6 +15,7 @@ copy_utils "functions/html_parsing/"
 copy_utils "functions/create_batch/"
 copy_utils "functions/check_embedding/"
 copy_utils "functions/cancel_batch/"
+copy_utils "functions/trans_vector/"
 
 # SAM 빌드 실행
 sam build

@@ -8,6 +8,8 @@ from utils.aws_ssm import SSMParameterStore
 
 ssm = SSMParameterStore()
 BUCKET_NAME = ssm.get_parameter("RECIPE_BUCKETNAME")
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.3904.108 Safari/537.36'
+
 recipe_logger = RecipeLogger(BUCKET_NAME)
 schema = OutputSchema()
 
@@ -24,7 +26,7 @@ def lambda_handler(event, context):
     rcp_no_arr = []
     for page_num in range(1,10):
         url = f"https://m.10000recipe.com/recipe/list.html?order=date&page={page_num}"
-        res = requests.get(url)
+        res = requests.get(url, headers={'User-Agent': USER_AGENT})
         soup = BeautifulSoup(res.content, 'html.parser')
         recipe_list_tag = soup.find('div', class_='recipe_list')
         for media_tag in recipe_list_tag.findAll('div', class_='media'):

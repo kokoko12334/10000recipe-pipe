@@ -8,12 +8,16 @@
 
 
 
+
+
 ### 2. 아키텍처
 <img src="./img/cicd.png">
 
 - **AWS SAM**: 서버리스 리소스(Lambda, Step Functions)를 정의하고, 자동으로 배포합니다.
 - **GitHub Actions**: CI/CD 파이프라인을 구축하여 코드 푸시 시 자동으로 유닛/통합 테스트를 실행한 후, 성공 시 AWS에 배포합니다.
-- **Pytest**: Lambda 함수의 유닛 테스트와 Step Functions의 통합 테스트를 자동화하여 코드 품질을 보장합니다.
+- **Pytest**: Lambda 함수의 유닛 테스트와 Step Functions의 통합 테스트를 수행합니다.
+
+
 
 
 

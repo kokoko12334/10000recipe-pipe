@@ -14,7 +14,6 @@ class KoreanTimeFormatter(logging.Formatter):
         korea_time = utc_time.astimezone(pytz.timezone('Asia/Seoul'))
         return korea_time.strftime('%Y-%m-%d %H:%M:%S')  # 기본 포맷 사용
     
-
 class RecipeLogger:
     def __init__(self, bucket_name: str):
         utc_now = datetime.now(pytz.utc)

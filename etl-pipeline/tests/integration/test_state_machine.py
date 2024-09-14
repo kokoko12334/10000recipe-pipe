@@ -2,17 +2,14 @@ import json
 import logging
 import os
 from time import sleep
-from typing import Dict
 from unittest import TestCase
 from uuid import uuid4
-
 import boto3
 from botocore.client import BaseClient
 
 """
 Make sure env variable AWS_SAM_STACK_NAME exists with the name of the stack we are going to test. 
 """
-
 
 class TestStateMachine(TestCase):
     """

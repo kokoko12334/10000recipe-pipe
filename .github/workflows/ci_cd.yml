@@ -75,12 +75,3 @@ jobs:
       - name: Notify Failure
         if: failure()
         run: echo "Integration test failed! Step Functions was not deployed to production."
-
-      # - name: Build and Deploy SAM Application
-      #   run: |
-      #     cd ./etl-pipeline
-      #     sudo chmod +x ./build.sh
-      #     ./build.sh
-      #     sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
-
-

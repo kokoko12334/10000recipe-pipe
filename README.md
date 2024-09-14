@@ -1,6 +1,6 @@
 ### 1. 프로젝트 개요
 
-이 프로젝트는 AWS SAM(Serverless Application Model)과 GitHub Actions를 이용해 **서버리스 데이터 파이프라인**(https://kokoko12334.tistory.com/120)의 인프라 관리, 테스트, 배포 자동화를 구현한 사례입니다. 
+이 프로젝트는 AWS SAM(Serverless Application Model)과 GitHub Actions를 이용해 **서버리스 데이터 파이프라인**(https://kokoko12334.tistory.com/120) 의 인프라 관리, 테스트, 배포 자동화를 구현한 사례입니다. 
 
  SAM을 활용해 Lambda 함수와 Step Functions 등 AWS 서버리스 리소스를 손쉽게 정의하고 관리하며, GitHub Actions를 통한 CI/CD 파이프라인으로 지속적인 통합 및 배포를 구현했습니다.
 

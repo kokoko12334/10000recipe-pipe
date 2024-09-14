@@ -11,7 +11,7 @@ Globals:
 
 Resources:
   RecipePipelineMachine:
-    Type: AWS::Serverless::StateMachine # More info about State Machine Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html
+    Type: AWS::Serverless::StateMachine
     Properties:
       DefinitionUri: statemachine/recipe_pipeline.asl.json
       DefinitionSubstitutions:

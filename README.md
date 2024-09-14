@@ -4,6 +4,8 @@
 
  SAM을 활용해 Lambda 함수와 Step Functions 등 AWS 서버리스 리소스를 손쉽게 정의하고 관리하며, GitHub Actions를 통한 CI/CD 파이프라인으로 지속적인 통합 및 배포를 구현했습니다.
 
+자세한 내용은 https://kokoko12334.tistory.com/124 에서 확인 할 수 있습니다.
+
 
 
 ### 2. 아키텍처

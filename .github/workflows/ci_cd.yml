@@ -60,7 +60,6 @@ jobs:
         run: |
           export AWS_SAM_STACK_NAME=etl-pipeline-test
           pytest etl-pipeline/tests/integration/
-        continue-on-error: true
 
       # 테스트 성공 시 운영 환경에 배포
       - name: Deploy Step Functions to Production Environment

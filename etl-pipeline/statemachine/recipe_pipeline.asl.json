@@ -23,7 +23,7 @@
                     "BackoffRate": 2
                 }
             ],
-            "Next": "updateOrnot?"
+            "Next": "updateOrNot?"
         },
         "updateOrnot?": {
             "Type": "Choice",

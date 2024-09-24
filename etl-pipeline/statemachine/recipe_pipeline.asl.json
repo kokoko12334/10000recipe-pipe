@@ -144,7 +144,7 @@
                         },
                         {
                             "Variable": "$.cnt",
-                            "NumericLessThanEquals": 10
+                            "NumericLessThanEquals": 30
                         }
                     ],
                     "Next": "30sec Wait"
@@ -157,7 +157,7 @@
                         },
                         {
                             "Variable": "$.cnt",
-                            "NumericGreaterThan": 10
+                            "NumericGreaterThan": 30
                         }
                     ],
                     "Next": "CancelBatch"
@@ -166,7 +166,7 @@
         },
         "30sec Wait": {
             "Type": "Wait",
-            "Seconds": 30,
+            "Seconds": 60,
             "Next": "checkEmbedding"
         },
         "CancelBatch": {
